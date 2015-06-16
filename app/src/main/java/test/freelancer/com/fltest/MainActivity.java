@@ -32,7 +32,7 @@ import test.freelancer.com.fltest.dagger.ApplicationComponent;
 import test.freelancer.com.fltest.dagger.DaggerApplication;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
