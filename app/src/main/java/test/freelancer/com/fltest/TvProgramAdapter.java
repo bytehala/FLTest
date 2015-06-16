@@ -35,10 +35,10 @@ public class TvProgramAdapter extends RecyclerView.Adapter<TvProgramAdapter.View
         TvProgram tvProgram = programList.get(i);
 
         viewHolder.name.setText(tvProgram.getName());
-        viewHolder.start_time.setText(tvProgram.getStartTime());
-        viewHolder.end_time.setText(tvProgram.getEndTime());
+        viewHolder.start_time.setText("Start:" + tvProgram.getStartTime());
+        viewHolder.end_time.setText("End: " + tvProgram.getEndTime());
         viewHolder.rating.setText(tvProgram.getRating());
-        viewHolder.channel.setText(tvProgram.getChannel());
+        viewHolder.channel.setText("Channel " + tvProgram.getChannel());
     }
 
     @Override

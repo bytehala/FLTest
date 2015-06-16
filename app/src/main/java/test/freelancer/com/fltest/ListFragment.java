@@ -29,6 +29,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,6 +48,8 @@ import test.freelancer.com.fltest.rest.TvgService;
  */
 public class ListFragment extends Fragment {
 
+    List<TvProgram> results;
+
     @Inject
     TvgService service;
 
@@ -58,15 +61,20 @@ public class ListFragment extends Fragment {
         ((MainActivity) getActivity()).getApplicationComponent().inject(this);
         recyclerView.addItemDecoration(new SpacesItemDecoration(20));
 
+        recyclerView.setHasFixedSize(true);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        results = new ArrayList<TvProgram>();
+        final TvProgramAdapter adapter = new TvProgramAdapter(results);
+        recyclerView.setAdapter(adapter);
+
         service.listTvPrograms(new Callback<ResultModel>() {
             @Override
             public void success(ResultModel resultModel, Response response) {
-//                Toast.makeText(getActivity(), "" + resultModel.getCount(), Toast.LENGTH_SHORT).show();
-                List<TvProgram> results = resultModel.getResults();
+                results.addAll(resultModel.getResults());
                 saveTvPrograms(results);
-
-                TvProgramAdapter adapter = new TvProgramAdapter(results);
-                recyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
 
             private void saveTvPrograms(List<TvProgram> results) {
@@ -81,16 +89,11 @@ public class ListFragment extends Fragment {
                 Log.e("MainActivity", error.getMessage());
                 Toast.makeText(getActivity(), "This is cached data", Toast.LENGTH_SHORT).show();
 
-//                Iterator<TvProgram> savedResults = TvProgram.findAll(TvProgram.class);
-                List<TvProgram> savedResults = TvProgram.find(TvProgram.class, null, null);
-                TvProgramAdapter adapter = new TvProgramAdapter(savedResults);
-                recyclerView.setAdapter(adapter);
+                results.addAll(TvProgram.find(TvProgram.class, null, null));
+                adapter.notifyDataSetChanged();
             }
         });
 
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
 
 
 

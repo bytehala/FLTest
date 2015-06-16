@@ -4,60 +4,83 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_margin="4dp"
-            android:id="@+id/name"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textSize="24dp"
-            tools:text="Criminal Minds" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_margin="4dp"
-            android:gravity="bottom"
-            android:id="@+id/rating"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            tools:text="PG" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/program_photo"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:src="@drawable/icon_film" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/start_time"
-            android:layout_margin="4dp"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Start 8:45pm" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/end_time"
-            android:layout_margin="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="End 10:40pm" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:textSize="24dp"
+                    tools:text="Criminal Minds" />
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    tools:text="Start 8:45pm" />
+
+                <TextView
+                    android:id="@+id/end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    tools:text="End 10:40pm" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/channel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                tools:text="Channel Seven" />
+
 
         </LinearLayout>
 
-        <TextView
-            android:layout_margin="4dp"
-            android:id="@+id/channel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Channel Seven" />
-
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/rating"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:layout_gravity="bottom|right"
+        android:background="@android:color/black"
+        android:textColor="@android:color/white"
+        tools:text="PG" />
 
 </android.support.v7.widget.CardView>
