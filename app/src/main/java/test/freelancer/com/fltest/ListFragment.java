@@ -72,110 +72,11 @@ public class ListFragment extends Fragment {
             public void failure(RetrofitError error) {
                 Log.e("MainActivity", error.getMessage());
                 Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
-
             }
         });
 
-        // eurgh, damn android.os.NeworkOnMainThreadException - so pesky!
-        // stackoverflow told me to do this:
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        // download the program guide
-        String JsonResponse = connect("http://whatsbeef.net/wabz/guide.php?start=0");
-        try {
-            JSONObject json = new JSONObject(JsonResponse);
-            view.setAdapter(new ListAdapter(json.getJSONArray("results")));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         return view;
     }
 
-    public static String connect(String url) {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpget = new HttpGet(url);
-        HttpResponse response;
-        try {
-            response = httpclient.execute(httpget);
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                InputStream instream = entity.getContent();
-                String result = convertStreamToString(instream);
-                instream.close();
-                return result;
-            }
-        } catch (IOException e) {
-        }
-        return null;
-    }
-
-    private static String convertStreamToString(InputStream is) {
-        /*
-         * To convert the InputStream to String we use the BufferedReader.readLine()
-         * method. We iterate until the BufferedReader return null which means
-         * there's no more data to read. Each line will appended to a StringBuilder
-         * and returned as String.
-         */
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-
-    public class ListAdapter extends BaseAdapter {
-
-        JSONArray array;
-
-        public ListAdapter(JSONArray response) {
-            array = response;
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-
-        @Override
-        public JSONObject getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LinearLayout layout = new LinearLayout(getActivity());
-            layout.setOrientation(LinearLayout.VERTICAL);
-
-            try {
-                TextView name = new TextView(getActivity());
-                name.setText(array.getJSONObject(position).getString("name"));
-
-                layout.addView(name);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return layout;
-        }
-    }
 }
