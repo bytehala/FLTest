@@ -1,44 +1,26 @@
 package test.freelancer.com.fltest;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import test.freelancer.com.fltest.recycler.EndlessRecyclerOnScrollListener;
+import test.freelancer.com.fltest.recycler.SpacesItemDecoration;
 import test.freelancer.com.fltest.rest.ResultModel;
 import test.freelancer.com.fltest.rest.TvProgram;
 import test.freelancer.com.fltest.rest.TvgService;
@@ -48,10 +30,13 @@ import test.freelancer.com.fltest.rest.TvgService;
  */
 public class ListFragment extends Fragment {
 
+    public static final int START_INCREMENT = 10;
     List<TvProgram> results;
-
     @Inject
     TvgService service;
+    int start = 0;
+    private TvProgramAdapter adapter;
+    int resultCount = 0;
 
     @Nullable
     @Override
@@ -65,13 +50,31 @@ public class ListFragment extends Fragment {
         final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        results = new ArrayList<TvProgram>();
-        final TvProgramAdapter adapter = new TvProgramAdapter(results);
+        results = new ArrayList<>();
+        adapter = new TvProgramAdapter(results);
         recyclerView.setAdapter(adapter);
 
-        service.listTvPrograms(new Callback<ResultModel>() {
+        loadTvPrograms(start);
+
+        recyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                start += START_INCREMENT;
+                if(start < resultCount)
+                    loadTvPrograms(start);
+            }
+        });
+
+        return recyclerView;
+    }
+
+    private void loadTvPrograms(int start) {
+        service.listTvPrograms(start, new Callback<ResultModel>() {
             @Override
             public void success(ResultModel resultModel, Response response) {
+                if (resultModel.getResults() == null)
+                    return;
+                resultCount = resultModel.getCount();
                 results.addAll(resultModel.getResults());
                 saveTvPrograms(results);
                 adapter.notifyDataSetChanged();
@@ -93,11 +96,6 @@ public class ListFragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
-
-
-
-
-        return recyclerView;
     }
 
 }
