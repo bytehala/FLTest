@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +29,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -50,15 +54,19 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ListView view = (ListView) inflater.inflate(R.layout.fragment_list, container, false);
+        final RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
         ((MainActivity) getActivity()).getApplicationComponent().inject(this);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(20));
 
         service.listTvPrograms(new Callback<ResultModel>() {
             @Override
             public void success(ResultModel resultModel, Response response) {
-                Toast.makeText(getActivity(), "Num: " + resultModel.getCount(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "" + resultModel.getCount(), Toast.LENGTH_SHORT).show();
                 List<TvProgram> results = resultModel.getResults();
                 saveTvPrograms(results);
+
+                TvProgramAdapter adapter = new TvProgramAdapter(results);
+                recyclerView.setAdapter(adapter);
             }
 
             private void saveTvPrograms(List<TvProgram> results) {
@@ -71,12 +79,22 @@ public class ListFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 Log.e("MainActivity", error.getMessage());
-                Toast.makeText(getActivity(), "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "This is cached data", Toast.LENGTH_SHORT).show();
+
+//                Iterator<TvProgram> savedResults = TvProgram.findAll(TvProgram.class);
+                List<TvProgram> savedResults = TvProgram.find(TvProgram.class, null, null);
+                TvProgramAdapter adapter = new TvProgramAdapter(savedResults);
+                recyclerView.setAdapter(adapter);
             }
         });
 
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
 
-        return view;
+
+
+        return recyclerView;
     }
 
 }

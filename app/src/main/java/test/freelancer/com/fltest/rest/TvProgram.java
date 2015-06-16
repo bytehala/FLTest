@@ -7,7 +7,7 @@ import com.orm.SugarRecord;
  */
 public class TvProgram extends SugarRecord<TvProgram> {
 
-    String result;
+    String name;
     String start_time;
     String end_time;
     String channel;
@@ -16,5 +16,25 @@ public class TvProgram extends SugarRecord<TvProgram> {
     // Sugar
     public TvProgram() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getStartTime() {
+        return start_time;
+    }
+
+    public String getEndTime() {
+        return end_time;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public String getChannel() {
+        return channel;
     }
 }
