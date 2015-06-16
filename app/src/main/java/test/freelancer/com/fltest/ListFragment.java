@@ -78,6 +78,8 @@ public class ListFragment extends Fragment {
                 results.addAll(resultModel.getResults());
                 saveTvPrograms(results);
                 adapter.notifyDataSetChanged();
+
+                ((MainActivity) getActivity()).hideLoadingIndicator();
             }
 
             private void saveTvPrograms(List<TvProgram> results) {
@@ -94,6 +96,7 @@ public class ListFragment extends Fragment {
 
                 results.addAll(TvProgram.find(TvProgram.class, null, null));
                 adapter.notifyDataSetChanged();
+                ((MainActivity) getActivity()).hideLoadingIndicator();
             }
         });
     }
