@@ -3,6 +3,7 @@ package test.freelancer.com.fltest;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,8 +28,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import test.freelancer.com.fltest.dagger.ApplicationComponent;
+import test.freelancer.com.fltest.dagger.DaggerApplication;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,4 +40,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
     }
 
+    public ApplicationComponent getApplicationComponent() {
+        return ((DaggerApplication) getApplication()).getApplicationComponent();
+    }
 }
